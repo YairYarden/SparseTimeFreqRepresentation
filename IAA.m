@@ -10,6 +10,11 @@ function [s, p] = IAA(y, A, numIterations)
     % p - the power of s
 % Written by Yair Yarden and Ofir Kedem - 2021
 % ----------------------------------------------------------------
+% Check Validation of inputs
+if(size(y,2) > 1)
+    y = transpose(y);
+end
+% ----------------------------------------------------------------
 % Initialize
 [numSamples, numBinsInNewBasis] = size(A);
 rowsNormA = sum( abs(A).^2 ).'; % size numBinsInNewBasis

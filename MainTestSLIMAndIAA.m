@@ -23,7 +23,7 @@ y = x + noiseVec;
 
 %% Generate A steering matrix for IAA algorithm
 freqVec = -fs/2 : fs/numFreqBins : fs/2 - 1/numFreqBins;
-A = exp( 1i*2*pi*timeVec*freqVec );
+A = exp( 1j*2*pi*timeVec*freqVec );
 
 %% Estimate PSD using IAA
 [s_IAA, p_IAA] = IAA(y, A, numIterationsIaa);

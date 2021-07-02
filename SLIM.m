@@ -13,6 +13,11 @@ function [s, p] = SLIM(y, A, q, numIterations)
     % p - the power of s
 % Written by Yair Yarden and Ofir Kedem - 2021
 % ----------------------------------------------------------------
+% Check Validation of inputs
+if(size(y,2) > 1)
+    y = transpose(y);
+end
+% ----------------------------------------------------------------
 stopThreshold = 0.01;
 % Initialize
 [numSamples, numBinsInNewBasis] = size(A);

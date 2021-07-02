@@ -1,12 +1,15 @@
-function [spectrogramIAA, specTimeVec, specFreqVec] = ComputeShortTimeIAA(signal, numIterations, fs, ...
-                                                numSamplesInFrame, stepSize, numFreqBins)
-% Synopsis : Compute spectrogram using IAA, by computing IAA on each frame of the signal separately
+function [spectrogram, specTimeVec, specFreqVec] = ComputeSpecBySparseAlgo(signal, numIterations, fs, ...
+                                                numSamplesInFrame, stepSize, numFreqBins, q, algorithmType)
+% Synopsis : Compute spectrogram using Sparsity promoting algorithm IAA or
+% SLIM
 % INPUTS : signal
 %        : numIterations
 %        : fs
 %        : numSamplesInFrame
 %        : stepSize
 %        : numFreqBins 
+%        : q
+%        : algorithmType
 
 % OUTPUT : spectrogramIAA
 %        : specTimeVec
@@ -36,10 +39,17 @@ frameTimeVec = (0 : numSamplesInFrame - 1) / fs;
 A = exp( 1j*2*pi*frameTimeVec'*specFreqVec );
 
 %% Compute IAA on each frame
-spectrogramIAA = zeros(size(A,2), numFrames);
+spectrogram = zeros(size(A,2), numFrames);
 for iFrame = 1 : numFrames
     currFrame = signal(1 + (iFrame - 1) * stepSize : (iFrame-1) * stepSize + numSamplesInFrame);
-    [~, spectrogramIAA(:, iFrame)] = IAA(currFrame, A, numIterations);
+    switch algorithmType
+        case 'IAA'
+            [~, spectrogram(:, iFrame)] = IAA(currFrame, A, numIterations);
+        case 'SLIM'
+            [~, spectrogram(:, iFrame)] = SLIM(currFrame, A, q, numIterations);
+        otherwise
+            error('No such algorithm Type option');
+    end
 end
 
 specTimeVec = (0 : numFrames - 1) *  (stepSize / fs);

@@ -20,7 +20,7 @@ end
 % ----------------------------------------------------------------
 stopThreshold = 0.01;
 % Initialize
-[numSamples, numBinsInNewBasis] = size(A);
+[numSamples, ~] = size(A);
 rowsNormA = sum( abs(A).^2 ).'; % size numBinsInNewBasis
 s = A'*y ./ rowsNormA;
 eta = mean( abs( y - A * s ).^2 );

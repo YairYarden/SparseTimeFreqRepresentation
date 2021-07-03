@@ -24,7 +24,10 @@ s = A'*y ./ rowsNormA; % size
 for iterationNum = 1 : numIterations
     p = abs(s).^2;
     % Very efficient (better than P = diag( p ); R = A*P*A'; )
-    R = ( A .* repmat( p.', numSamples, 1 ) ) * A'; 
+    R = ( A .* repmat( p.', numSamples, 1 ) ) * A';
+    if(rcond(R) < 1e-17) % invertion of R is unstable
+        break;
+    end
     R_inv = inv(R);
     
     % Efficient implementation

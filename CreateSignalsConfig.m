@@ -16,21 +16,26 @@ sConfigSignals.noiseVar = 0.001;
 sConfigSignals.numSamples = numSamples;
 
 % Parameters for ST-IAA and SLIM
-sConfigSignals.numIterationsIaa1 = 13;
+sConfigSignals.numIterationsIaa1 = 10;
 sConfigSignals.numIterationsIaa2 = 10;
-sConfigSignals.numIterationsIaa2 = 7;
+sConfigSignals.numIterationsIaa3 = 10;
 
-sConfigSignals.numIterationsSlim1 = 13;
+sConfigSignals.numIterationsSlim1 = 10;
 sConfigSignals.numIterationsSlim2 = 10;
-sConfigSignals.numIterationsSlim2 = 7;
+sConfigSignals.numIterationsSlim3 = 8;
 
-sConfigSignals.numFreqBins1 = 1000;
-sConfigSignals.numFreqBins2 = 1200;
-sConfigSignals.numFreqBins3 = 2000;
+sConfigSignals.numFreqBins1 = 900;
+sConfigSignals.numFreqBins2 = 800;
+sConfigSignals.numFreqBins3 = 500;
 
 sConfigSignals.numSamplesInFrame1 = 120;
 sConfigSignals.numSamplesInFrame2 = 50;
 sConfigSignals.numSamplesInFrame3 = 50;
+
+sConfigSignals.firstSlimQ = 0.1;
+sConfigSignals.secondSlimQ = 0.1;
+sConfigSignals.thirdSlimQ = 0.1;
+
 
 end
 

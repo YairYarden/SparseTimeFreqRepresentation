@@ -25,8 +25,12 @@ rowsNormA = sum( abs(A).^2 ).'; % size numBinsInNewBasis
 s = A'*y ./ rowsNormA;
 eta = mean( abs( y - A * s ).^2 );
 % ----------------------------------------------------------------
+lossFunctionVec = zeros(1, numIterations);
 % Start iterating
 for iterationNum = 1 : numIterations
+   lossFunctionVec(iterationNum) = numSamples * log(eta) + (1/eta) * sum(abs(y - A * s).^2) ...
+                  + sum((2/q)*(abs(s).^q - 1));
+              
    p = abs( s ).^( 2 - q );
    P = diag(p);
    Sigma = A * P * A' + eta * eye(numSamples);

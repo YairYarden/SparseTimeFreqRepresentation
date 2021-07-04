@@ -25,12 +25,8 @@ sinesDecayExp = sinesDecayExp + noiseVec;
 sinesDiffTime = sinesDiffTime + noiseVec;
 chirpAndFmSine = chirpAndFmSine + noiseVec;
 
-%% Compute Spectrograms
-q = 0.1;
-numIterations = 10;
-numFreqBins = 1000;
-numSamplesInFrame = 50;
-stepSize = 20;
+%% Spectrograms Params
+stepSize = 1;
 
 %% IAA - spectrograms
 [firstSpecIAA, timeSpecIaa1, freqSpecIaa1] = ComputeSpecBySparseAlgo(sinesDecayExp, sTimeVecs.firstSigTimeVec, sConfigSignals.numIterationsIaa1, fs, sConfigSignals.numSamplesInFrame1, stepSize, sConfigSignals.numFreqBins1, [], 'IAA');
@@ -38,44 +34,44 @@ stepSize = 20;
 [thirdSpecIAA, timeSpecIaa3, freqSpecIaa3] = ComputeSpecBySparseAlgo(chirpAndFmSine, sTimeVecs.thirdSigTimeVec, sConfigSignals.numIterationsIaa3, fs, sConfigSignals.numSamplesInFrame3, stepSize, sConfigSignals.numFreqBins3, [], 'IAA');
 
 %% SLIM - spectrograms
-[firstSpecSLIM, timeSpecSLIM1, freqSpecSLIM1] = ComputeSpecBySparseAlgo(sinesDecayExp, sTimeVecs.firstSigTimeVec, sConfigSignals.numIterationsSlim1, fs, sConfigSignals.numSamplesInFrame1, stepSize, sConfigSignals.numFreqBins1, q, 'SLIM');
-[secondSpecSLIM, timeSpecSLIM2, freqSpecSLIM2] = ComputeSpecBySparseAlgo(sinesDiffTime, sTimeVecs.secondSigTimeVec, sConfigSignals.numIterationsSlim2, fs, sConfigSignals.numSamplesInFrame2, stepSize, sConfigSignals.numFreqBins2, q, 'SLIM');
-[thirdSpecSLIM, timeSpecSLIM3, freqSpecSLIM3] = ComputeSpecBySparseAlgo(chirpAndFmSine, sTimeVecs.thirdSigTimeVec, sConfigSignals.numIterationsSlim3, fs, sConfigSignals.numSamplesInFrame3, stepSize, sConfigSignals.numFreqBins3, q, 'SLIM');
+[firstSpecSLIM, timeSpecSLIM1, freqSpecSLIM1] = ComputeSpecBySparseAlgo(sinesDecayExp, sTimeVecs.firstSigTimeVec, sConfigSignals.numIterationsSlim1, fs, sConfigSignals.numSamplesInFrame1, stepSize, sConfigSignals.numFreqBins1, sConfigSignals.firstSlimQ, 'SLIM');
+[secondSpecSLIM, timeSpecSLIM2, freqSpecSLIM2] = ComputeSpecBySparseAlgo(sinesDiffTime, sTimeVecs.secondSigTimeVec, sConfigSignals.numIterationsSlim2, fs, sConfigSignals.numSamplesInFrame2, stepSize, sConfigSignals.numFreqBins2, sConfigSignals.secondSlimQ, 'SLIM');
+[thirdSpecSLIM, timeSpecSLIM3, freqSpecSLIM3] = ComputeSpecBySparseAlgo(chirpAndFmSine, sTimeVecs.thirdSigTimeVec, sConfigSignals.numIterationsSlim3, fs, sConfigSignals.numSamplesInFrame3, stepSize, sConfigSignals.numFreqBins3, sConfigSignals.thirdSlimQ, 'SLIM');
 
 %% Plot spectrograms
 figure, 
 subplot(3,2,1);
 surf(timeSpecIaa1, freqSpecIaa1, pow2db(firstSpecIAA), 'EdgeColor', 'none');
 axis xy; axis tight; colormap(jet); view(0,90);
-xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecSLIM)]);
+xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecIaa1)]);
 title('ST-IAA Spectrogram'); xlabel('Time[sec]'); ylabel('Freq[Hz]'); set(gca,'fontsize',12);
 
 subplot(3,2,2);
-surf(timeSpecIaa2, freqSpecIaa2, pow2db(firstSpecSLIM), 'EdgeColor', 'none');
+surf(timeSpecSLIM1, freqSpecSLIM1, pow2db(firstSpecSLIM), 'EdgeColor', 'none');
 axis xy; axis tight; colormap(jet); view(0,90);
-xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecSLIM)]);
+xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecSLIM1)]);
 title('ST-SLIM Spectrogram'); xlabel('Time[sec]'); ylabel('Freq[Hz]'); set(gca,'fontsize',12);
 
 subplot(3,2,3);
-surf(timeSpecIaa3, freqSpecIaa3, pow2db(secondSpecIAA), 'EdgeColor', 'none');
+surf(timeSpecIaa2, freqSpecIaa2, pow2db(secondSpecIAA), 'EdgeColor', 'none');
 axis xy; axis tight; colormap(jet); view(0,90);
-xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecSLIM)]);
+xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecIaa2)]);
 title('ST-IAA Spectrogram'); xlabel('Time[sec]'); ylabel('Freq[Hz]'); set(gca,'fontsize',12);
 
 subplot(3,2,4);
-surf(timeSpecSLIM1, freqSpecSLIM1, pow2db(secondSpecSLIM), 'EdgeColor', 'none');
+surf(timeSpecSLIM2, freqSpecSLIM2, pow2db(secondSpecSLIM), 'EdgeColor', 'none');
 axis xy; axis tight; colormap(jet); view(0,90);
-xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecSLIM)]);
+xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecSLIM2)]);
 title('ST-SLIM Spectrogram'); xlabel('Time[sec]'); ylabel('Freq[Hz]'); set(gca,'fontsize',12);
 
 subplot(3,2,5);
-surf(timeSpecSLIM2, freqSpecSLIM2, pow2db(thirdSpecIAA), 'EdgeColor', 'none');
+surf(timeSpecIaa3, freqSpecIaa3, pow2db(thirdSpecIAA), 'EdgeColor', 'none');
 axis xy; axis tight; colormap(jet); view(0,90);
-xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecSLIM)]);
+xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecIaa3)]);
 title('ST-IAA Spectrogram'); xlabel('Time[sec]'); ylabel('Freq[Hz]'); set(gca,'fontsize',12);
 
 subplot(3,2,6);
 surf(timeSpecSLIM3, freqSpecSLIM3, pow2db(thirdSpecSLIM), 'EdgeColor', 'none');
 axis xy; axis tight; colormap(jet); view(0,90);
-xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecSLIM)]);
+xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecSLIM3)]);
 title('ST-SLIM Spectrogram'); xlabel('Time[sec]'); ylabel('Freq[Hz]'); set(gca,'fontsize',12);

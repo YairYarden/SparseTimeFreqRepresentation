@@ -1,4 +1,4 @@
-function [recoveredSamples, p] = MIAA(sampledSignal, A, nonMissingSamplesIndx, missingSamplesIndx, numIterations, p)
+function [recoveredSamples] = MIAA(sampledSignal, A, nonMissingSamplesIndx, missingSamplesIndx, numIterations)
 % Synopsis : Estimate Missing data samples using IAA algorithm
 % INPUTS
     % y - the sampled signal
@@ -11,7 +11,7 @@ function [recoveredSamples, p] = MIAA(sampledSignal, A, nonMissingSamplesIndx, m
 %% Estimation of coefficients in new basis using IAA algorithm with the
 % non-missing samples
 nonMissingA = A(nonMissingSamplesIndx, :);
-% [~, p] = IAA(sampledSignal, nonMissingA, numIterations);
+[~, p] = IAA(sampledSignal, nonMissingA, numIterations);
 
 %% Estimate the missing samples
 numMissingSamples = length(missingSamplesIndx);
@@ -38,8 +38,6 @@ switch caseNumber
         rightPart = sum(p' .* h, 2);
         recoveredSamples = leftPart \ rightPart;
 end
-
-
 
 end
 

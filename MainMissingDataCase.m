@@ -1,6 +1,6 @@
 %% Main code implementing 2016 paper - Missing data case
 clc; 
-% clearvars;
+clearvars;
 
 %% Generate Non-uniform time vectors
 numSamples = 2048;
@@ -20,13 +20,15 @@ nonMissingSampleSignal = fullSignal(nonMissedSamplesIndx);
 missedSamples = fullSignal(missingSamplesIndx);
 
 %% MIAA
-numFreqBins = 300;
+numFreqBins = 200;
 numIterationsIaa = 5;
 freqVec = -fs/2 : fs/numFreqBins : fs/2 - 1/numFreqBins;
 A = exp( 1j*2*pi*fullTimeVec'*freqVec );
-[missingSamples, p] = MIAA(nonMissingSampleSignal, A, nonMissedSamplesIndx, missingSamplesIndx, numIterationsIaa, tmpP);
-%%
+missingSamples = MIAA(nonMissingSampleSignal, A, nonMissedSamplesIndx, missingSamplesIndx, numIterationsIaa);
+
+%% Plot
 figure, 
-% plot(real(missingSamples)); hold on; plot(real(missedSamples));
-plot(real(missingSamples) ./ norm(missingSamples)); hold on; plot(real(missedSamples) ./ norm(missedSamples));
-legend('Estimated','Real');
+subplot(2,1,1); plot(real(missingSamples)); hold on; plot(real(missedSamples));
+ legend('Estimated','Real'); title('Estimated missing samples vs Real missing samples');
+subplot(2,1,2); plot(real(missingSamples) ./ norm(missingSamples)); hold on; plot(real(missedSamples) ./ norm(missedSamples));
+legend('Estimated','Real'); title('Normalized - Estimated vs Real');

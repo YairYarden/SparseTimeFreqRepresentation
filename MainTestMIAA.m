@@ -29,6 +29,6 @@ missingSamples = MIAA(nonMissingSampleSignal, A, nonMissedSamplesIndx, missingSa
 %% Plot
 figure, 
 subplot(2,1,1); plot(real(missingSamples)); hold on; plot(real(missedSamples));
- legend('Estimated','Real'); title('Estimated missing samples vs Real missing samples');
+legend('Estimated','Real'); title('Estimated missing samples vs Real missing samples');
 subplot(2,1,2); plot(real(missingSamples) ./ norm(missingSamples)); hold on; plot(real(missedSamples) ./ norm(missedSamples));
 legend('Estimated','Real'); title('Normalized - Estimated vs Real');

@@ -38,6 +38,7 @@ specFreqVec = -fs/2 : fs/numFreqBins : fs/2 - 1/numFreqBins;
 A = exp( 1j*2*pi*timeVec'*specFreqVec );
 
 %% Compute IAA on each frame
+initCondCounter = 0;
 spectrogram = zeros(size(A,2), numFrames);
 for iFrame = 1 : numFrames
     currA = A(1 + (iFrame - 1) * stepSize : (iFrame-1) * stepSize + numSamplesInFrame, :);
@@ -48,9 +49,22 @@ for iFrame = 1 : numFrames
         case 'SLIM'
             [curr_s_frame, ~] = SLIM(currFrame, currA, q, numIterations);
             spectrogram(:, iFrame) = abs(curr_s_frame).^2;
+            
+        case 'SLIM_IT'
+            if(iFrame == 1 || (exist('curr_s_frame','var') && norm(curr_s_frame) < 1e-5) ||...
+               initCondCounter > 4)
+                [curr_s_frame, ~] = SLIM(currFrame, currA, q, numIterations);
+                initCondCounter = 0;
+            else
+                [curr_s_frame, ~] = SLIM_IT(currFrame, currA, q, 1, curr_s_frame);
+                initCondCounter = initCondCounter + 1;
+            end
+            spectrogram(:, iFrame) = abs(curr_s_frame).^2;
+            
         otherwise
             error('No such algorithm Type option');
     end
+
 end
 
 specTimeVec = (0 : numFrames - 1) *  (stepSize / fs);

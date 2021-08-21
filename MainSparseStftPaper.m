@@ -28,7 +28,7 @@ PlotGeneratedSignals(sinesDecayExp, sinesDiffTime, chirpAndFmSine, fs, timeGrid,
 numFreqBins = numSamples * 2;
 freqVec = -fs/2 : fs/numFreqBins : fs/2 - 1/numFreqBins;
 A = exp( 1j*2*pi*timeGrid'*freqVec );
-numIterationsIaa = 15;
+numIterationsIaa = 8;
 
 [~, first_p_IAA] = IAA(sinesDecayExp', A, numIterationsIaa);
 [~, second_p_IAA] = IAA(sinesDiffTime', A, numIterationsIaa);

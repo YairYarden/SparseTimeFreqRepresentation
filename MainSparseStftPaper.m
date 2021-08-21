@@ -44,7 +44,7 @@ PlotTdrFdrTfr(sinesDecayExp, sinesDiffTime, chirpAndFmSine, timeGrid, ...
               firstSpecIAA, secondSpecIAA, thirdSpecIAA, timeSpecIaa, freqSpecIaa);
           
 %% Apply SLIM on signals
-q = 1;
+q = 0.05;
 % FR - SLIM
 numFreqBins = 2048;
 numSamplesInFrame = 64;

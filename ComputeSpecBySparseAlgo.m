@@ -3,6 +3,7 @@ function [spectrogram, specTimeVec, specFreqVec] = ComputeSpecBySparseAlgo(signa
 % Synopsis : Compute spectrogram using Sparsity promoting algorithm IAA or
 % SLIM
 % INPUTS : signal
+%        : timeVec
 %        : numIterations
 %        : fs
 %        : numSamplesInFrame
@@ -37,7 +38,7 @@ numFrames = floor(1 + (length(signal) - numSamplesInFrame) / stepSize);
 specFreqVec = -fs/2 : fs/numFreqBins : fs/2 - 1/numFreqBins;
 A = exp( 1j*2*pi*timeVec'*specFreqVec );
 
-%% Compute IAA on each frame
+%% Compute FDR on each frame
 spectrogram = zeros(size(A,2), numFrames);
 for iFrame = 1 : numFrames
     currA = A(1 + (iFrame - 1) * stepSize : (iFrame-1) * stepSize + numSamplesInFrame, :);

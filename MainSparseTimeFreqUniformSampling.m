@@ -35,9 +35,9 @@ numIterationsIaa = 8;
 [~, third_p_IAA] = IAA(chirpAndFmSine', A, numIterationsIaa);
 
 % TFR - IAA
-[firstSpecIAA, timeSpecIaa, freqSpecIaa] = ComputeSpecBySparseAlgo(sinesDecayExp, numIterationsIaa, fs, 64, 1, 200, [], 'IAA');
-[secondSpecIAA, ~, ~] = ComputeSpecBySparseAlgo(sinesDiffTime, numIterationsIaa, fs, 64, 1, 200, [], 'IAA');
-[thirdSpecIAA, ~, ~] = ComputeSpecBySparseAlgo(chirpAndFmSine, numIterationsIaa, fs, 64, 1, 200, [], 'IAA');
+[firstSpecIAA, timeSpecIaa, freqSpecIaa] = ComputeSpecBySparseAlgo(sinesDecayExp, timeGrid, numIterationsIaa, fs, 64, 1, 200, [], 'IAA');
+[secondSpecIAA, ~, ~] = ComputeSpecBySparseAlgo(sinesDiffTime, timeGrid, numIterationsIaa, fs, 64, 1, 200, [], 'IAA');
+[thirdSpecIAA, ~, ~] = ComputeSpecBySparseAlgo(chirpAndFmSine, timeGrid, numIterationsIaa, fs, 64, 1, 200, [], 'IAA');
 
 PlotTdrFdrTfr(sinesDecayExp, sinesDiffTime, chirpAndFmSine, timeGrid, ...
               first_p_IAA, second_p_IAA, third_p_IAA, freqVec, ...

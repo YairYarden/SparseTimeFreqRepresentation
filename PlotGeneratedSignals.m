@@ -15,7 +15,7 @@ freqGrid = -fs/2 : fs/length(timeGrid) : fs/2 - 1/length(timeGrid);
 figure,
 %% First Signal
 % Time domain
-subplot(3,3,1); plot(timeGrid, firstSignal); grid minor;
+subplot(3,3,1); plot(timeGrid, real(firstSignal)); grid minor;
 xlabel('Time[sec]'); ylabel('Amplitude'); title('Sum of sines with decaying Exponent');
 % FFT
 firstSignalFft = fftshift(fft(firstSignal));
@@ -30,7 +30,7 @@ title('Spectrogram'); xlabel('Time[sec]'); ylabel('Freq[Hz]'); set(gca,'fontsize
 
 %% Second signal
 % Time Domain
-subplot(3,3,4); plot(timeGrid, secondSignal); grid minor;
+subplot(3,3,4); plot(timeGrid, real(secondSignal)); grid minor;
 xlabel('Time[sec]'); ylabel('Amplitude'); title('Sum of sines in different times');
 % FFT
 secondSignalFft = fftshift(fft(secondSignal));
@@ -45,7 +45,7 @@ title('Spectrogram'); xlabel('Time[sec]'); ylabel('Freq[Hz]'); set(gca,'fontsize
 
 %% Third signal
 % Time Domain
-subplot(3,3,7); plot(timeGrid, thirdSignal); grid minor;
+subplot(3,3,7); plot(timeGrid, real(thirdSignal)); grid minor;
 xlabel('Time[sec]'); ylabel('Amplitude'); title('Chirp + Fm modulated Sine');
 % FFT
 thirdSignalFft = fftshift(fft(thirdSignal));

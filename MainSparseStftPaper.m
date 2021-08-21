@@ -4,7 +4,7 @@ clc; clearvars;
 
 %% Parameters for sampling and signals constructions 
 numSamples = 512;
-fs = 2;
+fs = 2; % Hz
 timeGrid = (0 : numSamples - 1) / fs;
 sPlot = CreatePlotConfig(0, 64, 63, 512);
 sConfigSignals = CreateSignalsConfig(numSamples, timeGrid, fs);

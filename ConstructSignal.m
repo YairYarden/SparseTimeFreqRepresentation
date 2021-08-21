@@ -31,17 +31,22 @@ fs = sConfigSignals.fs;
 signal = zeros(1, length(timeGrid));
 switch optionNumber
     case 1 % Sum of sines multiplied by decay exponent 
-        sineMat = sin(2*pi*sineFreqs'*timeGrid);
+        sineMat = exp(1j*2*pi*sineFreqs'*timeGrid);
         signal = sum(sineMat, 1) .* exp(-decayExp * timeGrid); 
+    
     case 2 % Sum of sines each in different time
         numSines = length(sineFreqs);
         frameSize = round(length(timeGrid) / numSines);
+        centers = zeros(1,numSines); %[-5, -6.5, -3, -1];
+        scales = ones(1,numSines); % [3, 1, 2, 2.5];
+        
         currSignalIdx = 1;
         for iFrame = 1 : numSines - 1
-            signal(currSignalIdx : currSignalIdx + frameSize) = sin(2*pi*sineFreqs(iFrame)*timeGrid(1 : 1 + frameSize));
+            signal(currSignalIdx : currSignalIdx + frameSize) = exp(1j*2*pi*sineFreqs(iFrame)*timeGrid(1 : 1 + frameSize)) * scales(iFrame) + centers(iFrame);
             currSignalIdx = currSignalIdx + frameSize;
         end
-        signal(currSignalIdx : end) = sin(2*pi*sineFreqs(end) * timeGrid(1 : end - currSignalIdx + 1));
+        signal(currSignalIdx : end) = exp(1j*2*pi*sineFreqs(end) * timeGrid(1 : end - currSignalIdx + 1)) * scales(end) + centers(end);
+    
     case 3 % Chirp + FM modulated sine
         gaussWindow = gausswin(length(timeGrid));
         chirpPart = gaussWindow' .* chirp(timeGrid, chirpStartFreq, max(timeGrid), chirpEndFreq);      

@@ -26,13 +26,14 @@ PlotGeneratedSignals(sinesDecayExp, sinesDiffTime, chirpAndFmSine, fs, timeGrid,
 %% Apply IAA on signals
 % FR - IAA
 numFreqBins = numSamples * 2;
+% freqVec = -fs/2 : fs/numFreqBins : 0;
 freqVec = -fs/2 : fs/numFreqBins : fs/2 - 1/numFreqBins;
 A = exp( 1j*2*pi*timeGrid'*freqVec );
 numIterationsIaa = 8;
 
-[~, first_p_IAA] = IAA(sinesDecayExp', A, numIterationsIaa);
-[~, second_p_IAA] = IAA(sinesDiffTime', A, numIterationsIaa);
-[~, third_p_IAA] = IAA(chirpAndFmSine', A, numIterationsIaa);
+[~, first_p_IAA] = IAA(sinesDecayExp.', A, numIterationsIaa);
+[~, second_p_IAA] = IAA(sinesDiffTime.', A, numIterationsIaa);
+[~, third_p_IAA] = IAA(chirpAndFmSine.', A, numIterationsIaa);
 
 % TFR - IAA
 [firstSpecIAA, timeSpecIaa, freqSpecIaa] = ComputeSpecBySparseAlgo(sinesDecayExp, timeGrid, numIterationsIaa, fs, 64, 1, 200, [], 'IAA');

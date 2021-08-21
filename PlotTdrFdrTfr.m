@@ -13,7 +13,7 @@ function [] = PlotTdrFdrTfr(firstSignal, secondSignal, thirdSignal, timeDomainVe
 
 %% First Signal
 % Time domain
-subplot(3,3,1); plot(timeDomainVec, firstSignal); grid minor;
+subplot(3,3,1); plot(timeDomainVec, real(firstSignal)); grid minor;
 xlabel('Time[sec]'); ylabel('Amplitude'); title('Sum of sines with decaying Exponent');
 % FFT
 subplot(3,3,2); plot(FreqDomainVec, mag2db(abs(first_p_IAA))); grid minor; xlim([0, max(FreqDomainVec)]);
@@ -26,7 +26,7 @@ title('Spectrogram'); xlabel('Time[sec]'); ylabel('Freq[Hz]'); set(gca,'fontsize
 
 %% Second signal
 % Time Domain
-subplot(3,3,4); plot(timeDomainVec, secondSignal); grid minor;
+subplot(3,3,4); plot(timeDomainVec, real(secondSignal)); grid minor;
 xlabel('Time[sec]'); ylabel('Amplitude'); title('Sum of sines in different times');
 % FFT
 subplot(3,3,5); plot(FreqDomainVec, mag2db(abs(second_p_IAA))); grid minor; xlim([0, max(FreqDomainVec)]);

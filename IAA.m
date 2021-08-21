@@ -35,6 +35,6 @@ for iterationNum = 1 : numIterations
     sDenumerator   = sum( (A' * R_inv) .* A.', 2 );
     s = sNumerator ./ sDenumerator;  
 end
-
+p = abs(s).^2;
 end
 

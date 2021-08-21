@@ -42,6 +42,6 @@ for iterationNum = 1 : numIterations
    s = s_new;
    eta = mean( abs( y - A * s ).^2 );
 end
-
+p = abs( s ).^( 2 - q );
 end
 

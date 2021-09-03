@@ -1,5 +1,5 @@
 function [spectrogram, specTimeVec, specFreqVec] = ComputeSpecBySparseAlgo(signal, timeVec, numIterations, fs, ...
-                                                numSamplesInFrame, stepSize, numFreqBins, q, algorithmType)
+                                                numSamplesInFrame, stepSize, numFreqBins, q, algorithmType, initCondType)
 % Synopsis : Compute spectrogram using Sparsity promoting algorithm IAA or
 % SLIM
 % INPUTS : signal
@@ -40,6 +40,8 @@ A = exp( 1j*2*pi*timeVec'*specFreqVec );
 %% Compute IAA on each frame
 initCondCounter = 0;
 spectrogram = zeros(size(A,2), numFrames);
+stftForInitCondition = ComputeStftForInitCondition(signal, numSamplesInFrame, stepSize,...
+                                                   numFreqBins, fs);
 for iFrame = 1 : numFrames
     currA = A(1 + (iFrame - 1) * stepSize : (iFrame-1) * stepSize + numSamplesInFrame, :);
     currFrame = signal(1 + (iFrame - 1) * stepSize : (iFrame-1) * stepSize + numSamplesInFrame);
@@ -51,20 +53,29 @@ for iFrame = 1 : numFrames
             spectrogram(:, iFrame) = abs(curr_s_frame).^2;
             
         case 'SLIM_IT'
-            if(iFrame == 1 || (exist('curr_s_frame','var') && norm(curr_s_frame) < 1e-5) ||...
-               initCondCounter > 4)
-                [curr_s_frame, ~] = SLIM(currFrame, currA, q, numIterations);
-                initCondCounter = 0;
-            else
-                [curr_s_frame, ~] = SLIM_IT(currFrame, currA, q, 1, curr_s_frame);
-                initCondCounter = initCondCounter + 1;
+            switch initCondType
+                case 'prevFrame'
+                    if(iFrame == 1 || (exist('curr_s_frame','var') && norm(curr_s_frame) < 1e-5) ||...
+                       initCondCounter > 4)
+                        [curr_s_frame, ~] = SLIM(currFrame, currA, q, numIterations);
+                        initCondCounter = 0;
+                    else
+                        [curr_s_frame, ~] = SLIM_IT(currFrame, currA, q, 1, curr_s_frame);
+                        initCondCounter = initCondCounter + 1;
+                    end
+                    spectrogram(:, iFrame) = abs(curr_s_frame).^2;
+                    
+                case 'stft'
+                    [curr_s_frame, ~] = SLIM_IT(currFrame, currA, q, 5, stftForInitCondition(:, iFrame));
+                    spectrogram(:, iFrame) = abs(curr_s_frame).^2;       
+                    
+                otherwise
+                    error('No such Inital condition type');
             end
-            spectrogram(:, iFrame) = abs(curr_s_frame).^2;
-            
         otherwise
-            error('No such algorithm Type option');
+            error('No such algorithm Type option');           
+       
     end
-
 end
 
 specTimeVec = (0 : numFrames - 1) *  (stepSize / fs);

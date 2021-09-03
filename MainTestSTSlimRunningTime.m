@@ -24,7 +24,7 @@ chirpAndFmSine = chirpAndFmSine + noiseVec;
 q = 0.1;
 numFreqBins = 500;
 numSamplesInFrame = 50;
-stepSize = 1;
+stepSize = 5;
 freqVec = -fs/2 : fs/numFreqBins : fs/2 - 1/numFreqBins;
 A = exp( 1j*2*pi*timeGrid'*freqVec );
 numIterationsSlim = 8;
@@ -32,7 +32,7 @@ numIterationsSlim = 8;
 % ST-SLIM_IT
 % [specSlim, specTimeVec, specFreqVec] = ComputeSpecBySparseAlgo(sinesDecayExp, timeGrid, numIterationsSlim, fs, numSamplesInFrame, stepSize, numFreqBins, q, 'SLIM_IT');
 % [specSlim, specTimeVec, specFreqVec] = ComputeSpecBySparseAlgo(sinesDiffTime, timeGrid, numIterationsSlim, fs, numSamplesInFrame, stepSize, numFreqBins, q, 'SLIM_IT');
-[specSlim, specTimeVec, specFreqVec] = ComputeSpecBySparseAlgo(chirpAndFmSine, timeGrid, numIterationsSlim, fs, numSamplesInFrame, stepSize, numFreqBins, q, 'SLIM_IT');
+[specSlim, specTimeVec, specFreqVec] = ComputeSpecBySparseAlgo(chirpAndFmSine, timeGrid, numIterationsSlim, fs, numSamplesInFrame, stepSize, numFreqBins, q, 'SLIM_IT', 'stft');
 
 % ST-SLIM
 % [specSlim2, specTimeVec, specFreqVec] = ComputeSpecBySparseAlgo(sinesDecayExp, timeGrid, numIterationsSlim, fs, numSamplesInFrame, stepSize, numFreqBins, q, 'SLIM');
@@ -48,9 +48,12 @@ title('ST-SLIM with initial Condition'); xlabel('Time[sec]'); ylabel('Freq[Hz]')
 myColorMap = jet(256); myColorMap(1,:) = 1; colormap(myColorMap); colorbar
 
 %%
+stftForInitCondition = ComputeStftForInitCondition(chirpAndFmSine,numSamplesInFrame,stepSize,...
+                                                   numFreqBins, fs);
+
 subplot(2,1,2);
-surf(specTimeVec, specFreqVec, pow2db(specSlim2), 'EdgeColor', 'none');
-axis xy; axis tight; 
+surf(specTimeVec, specFreqVec, pow2db(stftForInitCondition), 'EdgeColor', 'none');
+axis xy; axis tight;  view(0,90);
 xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,1]);
 title('ST-SLIM without initial Condition'); xlabel('Time[sec]'); ylabel('Freq[Hz]'); set(gca,'fontsize',12);
 myColorMap = jet(256); myColorMap(1,:) = 1; colormap(myColorMap); colorbar

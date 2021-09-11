@@ -2,8 +2,10 @@
 clc; clearvars;
 
 %% General Parameters
+isRegularStSlim;
 isConstVarChirp = false;
 isAdaptiveVarChirp = true;
+instFreqEstMethod = 'max';
 
 %% Parameters for sampling and signals constructions 
 numSamples = 512;
@@ -43,8 +45,19 @@ if(isConstVarChirp)
     xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecSlim)]);
     title('ST-SLIM Spectrogram. const \sigma^2 = 30'); xlabel('Time[sec]'); ylabel('Freq[Hz]'); set(gca,'fontsize',12);
 end
+
 %% ST-SLIM with adaptive variance chirp window
 if(isAdaptiveVarChirp)
+    % Adaptive Chirp window
+    [instFreqVec] = EstimateInstFreq(chirpAndFmSine, instFreqEstMethod, numSamplesInFrame,...
+                                     numSamplesInFrame-stepSize, numFreqBins, fs);
+    adaptiveVar = EstimateChirpWindowVar(instFreqVec, fs);
+    [chirpWinMat] = CreateAdaptiveChirpWindow(adaptiveVar, numSamplesInFrame, fs);
+    
+    % ST-SLIM
+    [specSlim, timeSpecSlim, freqSpecSlim] = ComputeSpecBySparseAlgo(chirpAndFmSine, timeVec, numIterationsSlim,...
+                                                fs, numSamplesInFrame, stepSize, numFreqBins,...
+                                                q, chirpWinMat, 'SLIM', 'adaptive');
     
     % Plot
     surf(timeSpecSlim, freqSpecSlim, pow2db(specSlim), 'EdgeColor', 'none');

@@ -1,6 +1,10 @@
 %% Main Test Sparse spectrogram using chirp window
 clc; clearvars;
 
+%% General Parameters
+isConstVarChirp = false;
+isAdaptiveVarChirp = true;
+
 %% Parameters for sampling and signals constructions 
 numSamples = 512;
 fs = 2;
@@ -27,14 +31,25 @@ frameTimeVec = -numSamplesInFrame/(2*fs) : 1/fs : numSamplesInFrame/(2*fs) - 1/f
 sigma = 20;
 chirpWin = (1 / sqrt(2*pi*sigma) ) * exp(-(frameTimeVec.^2) ./ (2 * sigma));
 
-%% Compute ST-SLIM 
-[specSlim, timeSpecSlim, freqSpecSlim] = ComputeSpecBySparseAlgo(chirpAndFmSine, timeVec, numIterationsSlim,...
-                                                fs, numSamplesInFrame, stepSize, numFreqBins,...
-                                                q, chirpWin, 'SLIM');
-                                            
-%% Plot
-surf(timeSpecSlim, freqSpecSlim, pow2db(specSlim), 'EdgeColor', 'none');
-axis xy; axis tight; colormap(jet); view(0,90);
-xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecSlim)]);
-title('ST-SLIM Spectrogram. const \sigma^2 = 30'); xlabel('Time[sec]'); ylabel('Freq[Hz]'); set(gca,'fontsize',12);
+%% Compute ST-SLIM with constant variance chirp window
+if(isConstVarChirp)
+    [specSlim, timeSpecSlim, freqSpecSlim] = ComputeSpecBySparseAlgo(chirpAndFmSine, timeVec, numIterationsSlim,...
+                                                    fs, numSamplesInFrame, stepSize, numFreqBins,...
+                                                    q, chirpWin, 'SLIM');
+
+    % Plot
+    surf(timeSpecSlim, freqSpecSlim, pow2db(specSlim), 'EdgeColor', 'none');
+    axis xy; axis tight; colormap(jet); view(0,90);
+    xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecSlim)]);
+    title('ST-SLIM Spectrogram. const \sigma^2 = 30'); xlabel('Time[sec]'); ylabel('Freq[Hz]'); set(gca,'fontsize',12);
+end
+%% ST-SLIM with adaptive variance chirp window
+if(isAdaptiveVarChirp)
+    
+    % Plot
+    surf(timeSpecSlim, freqSpecSlim, pow2db(specSlim), 'EdgeColor', 'none');
+    axis xy; axis tight; colormap(jet); view(0,90);
+    xlabel('Time'); colorbar; ylabel('Frequency(HZ)'); ylim([0,max(freqSpecSlim)]);
+    title('ST-SLIM Spectrogram. const \sigma^2 = 30'); xlabel('Time[sec]'); ylabel('Freq[Hz]');
+end
 

@@ -12,3 +12,5 @@
 
 # Compiled MEX binaries (all platforms)
 *.mex*
+
+Results/

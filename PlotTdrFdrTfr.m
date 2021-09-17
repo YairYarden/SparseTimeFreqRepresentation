@@ -11,6 +11,7 @@ function [] = PlotTdrFdrTfr(firstSignal, secondSignal, thirdSignal, timeDomainVe
 % Written by Yair Yarden and Ofir Kedem - 2021
 % ----------------------------------------------------------------
 
+figure();
 %% First Signal
 % Time domain
 subplot(3,3,1); plot(timeDomainVec, real(firstSignal)); grid minor;

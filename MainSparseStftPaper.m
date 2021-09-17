@@ -6,7 +6,11 @@ clc; clearvars;
 numSamples = 512;
 fs = 2; % Hz
 timeGrid = (0 : numSamples - 1) / fs;
-sPlot = CreatePlotConfig(0, 64, 63, 512);
+
+numSamplesInFrame = 64;
+overlap = numSamplesInFrame - 1;
+numFreqBins = 512;
+sPlot = CreatePlotConfig(0, numSamplesInFrame, overlap, numFreqBins);
 sConfigSignals = CreateSignalsConfig(numSamples, timeGrid, fs);
 
 %% Generate signals
@@ -39,6 +43,7 @@ numIterationsIaa = 8;
 [firstSpecIAA, timeSpecIaa, freqSpecIaa] = ComputeSpecBySparseAlgo(sinesDecayExp, timeGrid, numIterationsIaa, fs, 64, 1, 200, [], 'IAA');
 [secondSpecIAA, ~, ~] = ComputeSpecBySparseAlgo(sinesDiffTime, timeGrid, numIterationsIaa, fs, 64, 1, 200, [], 'IAA');
 [thirdSpecIAA, ~, ~] = ComputeSpecBySparseAlgo(chirpAndFmSine, timeGrid, numIterationsIaa, fs, 64, 1, 200, [], 'IAA');
+
 
 PlotTdrFdrTfr(sinesDecayExp, sinesDiffTime, chirpAndFmSine, timeGrid, ...
               first_p_IAA, second_p_IAA, third_p_IAA, freqVec, ...

@@ -22,10 +22,12 @@ end
 numFrames = length(instFreqVec);
 chirpVar = zeros(1, numFrames);
 normFactor = 2 * sqrt(2 * log(2));
+startInd = 0;
+endInd = 0;
 for iTime = 1 : numFrames
     currSum = 0;
     timeOffset = 0;
-    while(currSum < zeta)      
+    while(currSum < zeta && startInd > -1 && endInd < numFrames)      
         if(iTime - timeOffset < 1)
             startInd = 1;
         else
@@ -38,10 +40,10 @@ for iTime = 1 : numFrames
             endInd = iTime + timeOffset;
         end
         
-        currSum = sum(instFreqVec(startInd : endInd));
+        currSum = (1/fs) * sum(instFreqVec(startInd : endInd));
         timeOffset = timeOffset + 1;
     end
-    chirpVar(iTime) = (endInd - startInd + 1) / normFactor;
+    chirpVar(iTime) = ((endInd - startInd + 1) / normFactor)^2;
 end
 
 end

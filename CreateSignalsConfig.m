@@ -12,7 +12,7 @@ sConfigSignals.fmCentralFreq = 0.75;
 sConfigSignals.fmFreqDev = 0.2;
 sConfigSignals.fmSineFreq = 1 / timeGrid(256);
 sConfigSignals.fs = fs;
-sConfigSignals.noiseVar = 0.001;
+sConfigSignals.noiseVar = 0.001; 
 sConfigSignals.numSamples = numSamples;
 
 % Parameters for ST-IAA and SLIM

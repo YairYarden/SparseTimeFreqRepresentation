@@ -1,4 +1,4 @@
-function [s, p] = SLIM(y, A, q, numIterations)
+function [s, p, loss] = SLIM(y, A, q, numIterations)
 % Synopsis : Implementation of SLIM (Sparse Learning via Iterative
 % Minimization. 
 % eta corresponds to the noise power
@@ -41,6 +41,7 @@ for iterationNum = 1 : numIterations
    end
    s = s_new;
    eta = mean( abs( y - A * s ).^2 );
+   loss = lossFunctionVec(iterationNum);
 end
 
 end

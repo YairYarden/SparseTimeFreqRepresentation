@@ -1,5 +1,5 @@
-function [spectrogram, specTimeVec, specFreqVec] = ComputeSpecBySparseAlgo(signal, timeVec, numIterations, fs, ...
-                                                numSamplesInFrame, stepSize, numFreqBins, q, algorithmType, initCondType)
+function [spectrogram, specTimeVec, specFreqVec,lossVec] = ComputeSpecBySparseAlgo(signal, timeVec, numIterations, fs, ...
+                                                numSamplesInFrame, stepSize, numFreqBins, q, algorithmType, initCondType, initPoints)
 % Synopsis : Compute spectrogram using Sparsity promoting algorithm IAA or
 % SLIM
 % INPUTS : signal
@@ -40,8 +40,9 @@ A = exp( 1j*2*pi*timeVec'*specFreqVec );
 %% Compute IAA on each frame
 initCondCounter = 0;
 spectrogram = zeros(size(A,2), numFrames);
-stftForInitCondition = ComputeStftForInitCondition(signal, numSamplesInFrame, stepSize,...
-                                                   numFreqBins, fs);
+lossVec = zeros(1, numFrames);
+% stftForInitCondition = ComputeStftForInitCondition(signal, numSamplesInFrame, stepSize,...
+%                                                    numFreqBins, fs);
 for iFrame = 1 : numFrames
     currA = A(1 + (iFrame - 1) * stepSize : (iFrame-1) * stepSize + numSamplesInFrame, :);
     currFrame = signal(1 + (iFrame - 1) * stepSize : (iFrame-1) * stepSize + numSamplesInFrame);
@@ -49,24 +50,29 @@ for iFrame = 1 : numFrames
         case 'IAA'
             [~, spectrogram(:, iFrame)] = IAA(currFrame, currA, numIterations);
         case 'SLIM'
-            [curr_s_frame, ~] = SLIM(currFrame, currA, q, numIterations);
+            [curr_s_frame, ~, loss] = SLIM(currFrame, currA, q, numIterations);
+            lossVec(iFrame) = loss;
             spectrogram(:, iFrame) = abs(curr_s_frame).^2;
             
         case 'SLIM_IT'
             switch initCondType
                 case 'prevFrame'
-                    if(iFrame == 1 || (exist('curr_s_frame','var') && norm(curr_s_frame) < 1e-5) ||...
-                       initCondCounter > 4)
-                        [curr_s_frame, ~] = SLIM(currFrame, currA, q, numIterations);
+                    if(iFrame == 1 || (exist('curr_s_frame','var') && norm(curr_s_frame) < 1e-5)...
+                     || (~isempty(find(initPoints == iFrame,1))))
+                        [curr_s_frame, ~,loss] = SLIM(currFrame, currA, q, numIterations);
                         initCondCounter = 0;
+                        lossVec(iFrame) = loss;
                     else
-                        [curr_s_frame, ~] = SLIM_IT(currFrame, currA, q, 1, curr_s_frame);
+                        curr_s_frame = curr_s_frame ./ norm(curr_s_frame);
+                        [curr_s_frame, ~, loss] = SLIM_IT(currFrame, currA, q, 1, curr_s_frame);
                         initCondCounter = initCondCounter + 1;
+                        
+                        lossVec(iFrame) = loss;
                     end
                     spectrogram(:, iFrame) = abs(curr_s_frame).^2;
                     
                 case 'stft'
-                    [curr_s_frame, ~] = SLIM_IT(currFrame, currA, q, 5, stftForInitCondition(:, iFrame));
+                    [curr_s_frame, ~] = SLIM_IT(currFrame, currA, q, 4, stftForInitCondition(:, iFrame));
                     spectrogram(:, iFrame) = abs(curr_s_frame).^2;       
                     
                 otherwise

@@ -1,4 +1,4 @@
-function [s, p] = SLIM_IT(y, A, q, numIterations, s_initialCond)
+function [s, p,loss] = SLIM_IT(y, A, q, numIterations, s_initialCond)
 % Synopsis : SLIM with initial conidition input
 % eta corresponds to the noise power
 % INPUTS : 
@@ -29,7 +29,8 @@ lossFunctionVec = zeros(1, numIterations);
 for iterationNum = 1 : numIterations
    lossFunctionVec(iterationNum) = numSamples * log(eta) + (1/eta) * sum(abs(y - A * s).^2) ...
                   + sum((2/q)*(abs(s).^q - 1));
-              
+   loss = lossFunctionVec(iterationNum);
+           
    p = abs( s ).^( 2 - q );
    P = diag(p);
    Sigma = A * P * A' + eta * eye(numSamples);
@@ -40,6 +41,7 @@ for iterationNum = 1 : numIterations
    end
    s = s_new;
    eta = mean( abs( y - A * s ).^2 );
+
 end
 
 end

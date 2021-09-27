@@ -43,7 +43,7 @@ for iTime = 1 : numFrames
         currSum = (1/fs) * sum(instFreqVec(startInd : endInd));
         timeOffset = timeOffset + 1;
     end
-    chirpVar(iTime) = ((endInd - startInd + 1) / normFactor)^2;
+    chirpVar(iTime) = ((endInd - startInd + 1) / normFactor);
 end
 
 end
